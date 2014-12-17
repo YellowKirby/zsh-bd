@@ -1,8 +1,10 @@
 bd () {
-  (($#<1)) && {
-    print -- "usage: $0 <name-of-any-parent-directory>"
-    return 1
-  } >&2
+  # No-arg case. jump to project root
+  if [[ -z "$1" ]]; then
+    cd $(git rev-parse --show-toplevel)
+    return 0
+  fi
+
   # Get parents (in reverse order)
   local parents
   local num=${#${(ps:/:)${PWD}}}
@@ -38,3 +40,4 @@ _bd () {
   reply=($reply "/")
 }
 compctl -V directories -K _bd bd
+alias u="bd"
